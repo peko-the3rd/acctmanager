@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="16dp">
+
+    <com.beardedhen.androidbootstrap.BootstrapEditText
+        android:id="@+id/selected_password"
+        android:layout_width="295dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/selected_id"
+        android:layout_marginTop="126dp"
+        android:enabled="false"
+        android:textSize="20sp"
+        app:bootstrapBrand="info"/>
+    <TextView
+        android:id="@+id/selected_password_gone"
+        android:textSize="20sp"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content" />
+
+    <com.beardedhen.androidbootstrap.BootstrapEditText
+        android:id="@+id/selected_id"
+        android:layout_width="295dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="76dp"
+        android:enabled="false"
+        android:textSize="20sp"
+        app:bootstrapBrand="info"/>
+    <TextView
+    android:id="@+id/selected_id_gone"
+    android:textSize="120sp"
+    android:visibility="gone"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content" />
+
+    <com.beardedhen.androidbootstrap.BootstrapEditText
+        android:id="@+id/selected_remarks"
+        android:layout_width="295dp"
+        android:layout_height="74dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/selected_password"
+        android:layout_marginTop="180dp"
+        android:background="@color/colorAliceblue"
+        android:enabled="false"
+        android:inputType="textMultiLine"
+        android:maxLines="10"
+        android:minLines="5"
+        app:bootstrapBrand="info" />
+    <TextView
+        android:id="@+id/selected_remarks_gone"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content" />
+
+    <com.beardedhen.androidbootstrap.BootstrapButton
+        android:id="@+id/edit_button"
+        android:layout_width="106dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/update_button"
+        android:layout_toStartOf="@+id/update_button"
+        android:text="編集"
+        app:bootstrapBrand="success" />
+
+    <com.beardedhen.androidbootstrap.BootstrapButton
+        android:id="@+id/update_button"
+        android:layout_width="108dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="156dp"
+        android:layout_marginEnd="84dp"
+        android:enabled="false"
+        android:text="更新"
+        app:bootstrapBrand="success" />
+
+    <com.beardedhen.androidbootstrap.BootstrapButton
+        android:id="@+id/finish_button"
+        android:layout_width="108dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="72dp"
+        android:text="終了"
+        app:bootstrapBrand="warning"
+        app:roundedCorners="true" />
+
+    <ImageView
+        android:id="@+id/selected_img"
+        android:layout_width="58dp"
+        android:layout_height="47dp" />
+    <Spinner
+        android:id="@+id/service_spinner"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp" />
+    <TextView
+        android:id="@+id/service_spinner_gone"
+        android:textSize="20sp"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content" />
+    <!-- android:visibility="gone"-->
+    <TextView
+        android:id="@+id/selected_uid_gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="" />
+
+</RelativeLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <ImageView
+        android:id="@+id/row_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/ic_launcher_foreground" />
+    <TextView
+        android:id="@+id/row_id_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="登録ID : " />
+    <TextView
+        android:id="@+id/row_mail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!" />
+    <TextView
+        android:id="@+id/row_uid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="" />
+</LinearLayout>
