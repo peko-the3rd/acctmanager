@@ -1,9 +1,20 @@
 package jp.thesaurus.acctmanager;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.hardware.fingerprint.FingerprintManager;
+import android.os.CancellationSignal;
+import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,13 +24,11 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 //import com.bumptech.glide.Glide;
 //import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,6 +39,9 @@ import jp.thesaurus.acctmanager.jp.thesaurus.utils.ViewUtil;
 
 public class AcctListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
+    private Dialog mDialog;
+    private CancellationSignal mCancellationSignal;
+
     static SQLiteDatabase db;
     private List<Map<String, String>> listData = new ArrayList<>();
 
@@ -39,6 +51,29 @@ public class AcctListActivity extends AppCompatActivity implements AdapterView.O
     static ArrayAdapter<String> adapter;
     ListView listView;
     ImageView imageView;
+    private static final String TAG = "AcctListActivity";
+
+    public static final int PREFERENCE_INIT = 0;
+    public static final int PREFERENCE_BOOTED = 1;
+
+
+    //データ保存
+    private void setState(int state) {
+        // SharedPreferences設定を保存
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        sp.edit().putInt("InitState", state).commit();
+    }
+
+    //データ読み出し
+    private int getState() {
+        // 読み込み
+        int state;
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        state = sp.getInt("InitState", PREFERENCE_INIT);
+        return state;
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +87,29 @@ public class AcctListActivity extends AppCompatActivity implements AdapterView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_acct_list);
 
-        this.createList();
+        if (savedInstanceState == null) {
+            useFingerprint();
+            //createList();
+        }
 
     }
     @Override
+    protected void onRestart() {
+
+        super.onRestart();
+        Log.d("onRestart","-----------------------onRestart");
+
+        listView = null;
+        imageView =null;
+        listData = null;
+        names = new ArrayList<String>();
+        icons = new ArrayList<Bitmap>();
+        uids  = new ArrayList<String>();
+
+        setContentView(R.layout.activity_acct_list);
+        createList();
+    }
+/*    @Override
     protected void onResume() {
         super.onResume();
         listView = null;
@@ -67,7 +121,71 @@ public class AcctListActivity extends AppCompatActivity implements AdapterView.O
 
         setContentView(R.layout.activity_acct_list);
 
-        this.createList();
+        // ダイアログの作成と表示
+        if(PREFERENCE_INIT != getState() ){
+            //初回起動時のみ表示する
+            useFingerprint();
+            //setState(PREFERENCE_BOOTED);
+        } else{
+            createList();
+        }
+        setState(PREFERENCE_BOOTED);
+    }*/
+
+    private void useFingerprint() {
+        if (checkSelfPermission(Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        FingerprintManager fingerprintManager = (FingerprintManager) getSystemService(Context.FINGERPRINT_SERVICE);
+        if (fingerprintManager.isHardwareDetected() || fingerprintManager.hasEnrolledFingerprints()) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("指紋認証");
+            builder.setMessage("指紋センサーに触れてください");
+            View alertView = getLayoutInflater().inflate(R.layout.alert_layout, null);
+            builder.setView(alertView);
+            builder.setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    mCancellationSignal.cancel();
+                }
+            });
+            builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    mCancellationSignal.cancel();
+                }
+            });
+            mDialog = builder.show();
+
+            mCancellationSignal = new CancellationSignal();
+
+            fingerprintManager.authenticate(null, mCancellationSignal, 0, new FingerprintManager.AuthenticationCallback() {
+                @Override
+                public void onAuthenticationError(int errorCode, CharSequence errString) {
+                    Toast.makeText(AcctListActivity.this, "onAuthentication-Error: " + errString, Toast.LENGTH_SHORT).show();
+                    mDialog.dismiss();
+                }
+
+                @Override
+                public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
+                    Toast.makeText(AcctListActivity.this, "onAuthentication-Help: " + helpString, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
+                    Toast.makeText(AcctListActivity.this, "指紋認証成功", Toast.LENGTH_SHORT).show();
+                    mDialog.dismiss();
+                    createList();
+                }
+
+                @Override
+                public void onAuthenticationFailed() {
+                    Toast.makeText(AcctListActivity.this, "onAuthentication-Failed", Toast.LENGTH_SHORT).show();
+                }
+            }, new Handler());
+        }
     }
 
     /**
@@ -119,6 +237,7 @@ public class AcctListActivity extends AppCompatActivity implements AdapterView.O
 
         // SubActivityへ遷移
         startActivity(intent);
+
 
     }
     @Override

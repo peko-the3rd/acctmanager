@@ -159,8 +159,9 @@ public class AcctDetailActivity extends AppCompatActivity {
             TextView remarksGone = findViewById(R.id.selected_remarks_gone);
             TextView uidGone = findViewById(R.id.selected_uid_gone);
 
-            ViewUtil.formValidate(id,password,remarks);
-
+            if(!ViewUtil.formValidate(id,password,remarks)){
+                return;
+            }
             DBHelper helper = new DBHelper(getApplicationContext());
             String spinnerPosition = String.valueOf(spinner.getSelectedItemPosition()+1);
 

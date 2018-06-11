@@ -37,7 +37,7 @@ public class ViewUtil {
     /**
      * 入力チェック
      */
-    public static void formValidate(BootstrapEditText id, BootstrapEditText password,BootstrapEditText remarks) {
+    public static boolean formValidate(BootstrapEditText id, BootstrapEditText password,BootstrapEditText remarks) {
 
         String displayId = id.getText().toString();
         String displayPassword = password.getText().toString();
@@ -49,8 +49,8 @@ public class ViewUtil {
             id.setBootstrapBrand(DefaultBootstrapBrand.DANGER);
             password.setBootstrapBrand(DefaultBootstrapBrand.DANGER);
             remarks.setBootstrapBrand(DefaultBootstrapBrand.DANGER);
-            return;
+            return false;
         }
-        return;
+        return true;
     }
 }

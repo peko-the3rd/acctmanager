@@ -46,7 +46,9 @@ public class AcctEntryActivity extends AppCompatActivity {
             TextView serviceIndex = findViewById(R.id.s_index_view_gone);
             TextView serviceName = findViewById(R.id.s_name_view);
 
-            ViewUtil.formValidate(id,password,remarks);
+            if(!ViewUtil.formValidate(id,password,remarks)){
+                return;
+            }
 
             DBHelper helper = new DBHelper(getApplicationContext());
             SQLiteDatabase db = helper.getWritableDatabase();
